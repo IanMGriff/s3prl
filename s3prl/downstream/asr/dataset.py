@@ -25,6 +25,9 @@ from torch.utils.data.dataset import Dataset
 import torchaudio
 #-------------#
 from .dictionary import Dictionary
+#-------------#
+import ABGenericPythonToolbox.GpyT
+import ABGenericPythonToolbox.pipelineTemplate
 
 SAMPLE_RATE = 16000
 HALF_BATCHSIZE_TIME = 2000
@@ -111,6 +114,8 @@ class SequenceDataset(Dataset):
     def _load_wav(self, wav_path):
         wav, sr = torchaudio.load(os.path.join(self.libri_root, wav_path))
         assert sr == self.sample_rate, f'Sample rate mismatch: real {sr}, config {self.sample_rate}'
+        results = ABGenericPythonToolbox.pipelineTemplate.processingPipeline((os.path.join(self.libri_root, wav_path)))
+        wav, sr = results['audioOut'], results['audioFs']
         return wav.view(-1)
 
     def _load_transcript(self, x_list):

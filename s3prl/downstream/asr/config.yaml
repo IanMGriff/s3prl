@@ -48,7 +48,8 @@ downstream_expert:
     batch_size: 32
     eval_batch_size: 1
     libri_root: '/content/gdrive/MyDrive/6345Final/librispeech/LibriSpeech'
-    bucket_file: './data/librispeech/len_for_bucket'
+    bucket_file: './data/librispeech/output'
+    #old bucket file at len_for_bu
     dict_path: "./downstream/asr/char.dict"
 
     zero_infinity: True

@@ -47,10 +47,10 @@ downstream_expert:
     train_batch_size: 32
     batch_size: 32
     eval_batch_size: 1
-    libri_root: '/app/data/LibriSpeech'
+    libri_root: '/content/gdrive/MyDrive/6345/final/librispeech/LibriSpeech'
     bucket_file: './data/librispeech/len_for_bucket'
     dict_path: "./downstream/asr/char.dict"
-
+    vocoded: False
     zero_infinity: True
 
     decoder_args:

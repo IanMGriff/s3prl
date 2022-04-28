@@ -27,12 +27,12 @@ class DownstreamExpert(nn.Module):
         self.upstream_dim = upstream_dim
         self.datarc = downstream_expert['datarc']
         self.modelrc = downstream_expert['modelrc']
-
+        self.vocoded = self.datarc['vocoded']
         self.get_dataset()
 
-        self.train_dataset = FluentCommandsDataset(self.train_df, self.base_path, self.Sy_intent)
-        self.dev_dataset = FluentCommandsDataset(self.valid_df, self.base_path, self.Sy_intent)
-        self.test_dataset = FluentCommandsDataset(self.test_df, self.base_path, self.Sy_intent)
+        self.train_dataset = FluentCommandsDataset(self.train_df, self.base_path, self.Sy_intent, self.vocoded)
+        self.dev_dataset = FluentCommandsDataset(self.valid_df, self.base_path, self.Sy_intent, self.vocoded)
+        self.test_dataset = FluentCommandsDataset(self.test_df, self.base_path, self.Sy_intent, self.vocoded)
 
         model_cls = eval(self.modelrc['select'])
         model_conf = self.modelrc.get(self.modelrc['select'], {})

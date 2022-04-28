@@ -12,6 +12,7 @@
 ###############
 import logging
 import os
+import sys
 import random
 #-------------#
 import pandas as pd
@@ -25,6 +26,12 @@ from torch.utils.data.dataset import Dataset
 import torchaudio
 #-------------#
 from .dictionary import Dictionary
+sys.path.append('/content/gdrive/MyDrive/6345/final/s3prl/ABGenericPythonToolbox')
+try:
+  from ABGenericPythonToolbox.pipelineTemplate import processingPipeline
+  print('import works')
+except Exception as e:
+  print(e)
 
 SAMPLE_RATE = 16000
 HALF_BATCHSIZE_TIME = 2000
@@ -42,6 +49,7 @@ class SequenceDataset(Dataset):
         self.libri_root = libri_root
         self.sample_rate = SAMPLE_RATE
         self.split_sets = kwargs[split]
+        self.vocoded = kwargs['vocoded']
 
         # Read table for bucketing
         assert os.path.isdir(bucket_file), 'Please first run `python3 preprocess/generate_len_for_bucket.py -h` to get bucket file.'
@@ -109,7 +117,12 @@ class SequenceDataset(Dataset):
         return x.split('/')[-1].split('.')[0]
 
     def _load_wav(self, wav_path):
-        wav, sr = torchaudio.load(os.path.join(self.libri_root, wav_path))
+        if not self.vocoded:
+          wav, sr = torchaudio.load(os.path.join(self.libri_root, wav_path))
+        elif self.vocoded:
+          results = processingPipeline((os.path.join(self.libri_root, wav_path)))
+          wav, sr = results['audioOut'], results['audioFs']
+          wav = torch.from_numpy(wav)
         assert sr == self.sample_rate, f'Sample rate mismatch: real {sr}, config {self.sample_rate}'
         return wav.view(-1)
 
